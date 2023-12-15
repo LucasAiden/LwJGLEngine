@@ -1,7 +1,11 @@
 package me.ttmso;
 
+import me.ttmso.engine.Window;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("HELLO");
+        Window window = Window.get();
+
+        window.run();
     }
 }
