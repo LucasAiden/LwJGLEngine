@@ -68,7 +68,7 @@ public class Window {
         while (!glfwWindowShouldClose(glfwWindow)) {
             glfwPollEvents();
 
-            glClearColor(0, 0, 0, 255);
+            glClearColor(0.1f, 0.15f, 0.2f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
 
             glfwSwapBuffers(glfwWindow);
