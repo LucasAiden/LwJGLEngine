@@ -1,9 +1,11 @@
 package me.ttmso.engine;
 
+import me.ttmso.engine.input.*;
 import org.lwjgl.Version;
-import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 
+import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -20,8 +22,8 @@ public class Window {
     private static Scene currentScene;
 
     private Window() {
-        this.width = 1200;
-        this.height = 800;
+        this.width = 1500;
+        this.height = 900;
 
         this.title = "Window";
     }
@@ -38,17 +40,21 @@ public class Window {
         System.out.println("LwJGL version: " + Version.getVersion());
 
         init();
-
         changeScene(initScene);
-
         loop();
+
+        glfwFreeCallbacks(glfwWindow);
+        glfwDestroyWindow(glfwWindow);
+
+        glfwTerminate();
+        glfwSetErrorCallback(null).free();
     }
 
     public void init() {
         GLFWErrorCallback.createPrint(System.err).set();
 
         if (!glfwInit()) {
-            throw new IllegalStateException("fuckin glfw init error idk");
+            throw new IllegalStateException("GLFW failed to init");
         }
 
         glfwDefaultWindowHints();
@@ -58,8 +64,10 @@ public class Window {
 
         glfwWindow = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
         if (glfwWindow == NULL) {
-            throw new IllegalStateException("THE GLFW WINDOW FAILED ME");
+            throw new IllegalStateException("The GLFW window failed to create");
         }
+
+        glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
 
         glfwMakeContextCurrent(glfwWindow);
         glfwSwapInterval(1); // V-Sync
