@@ -17,6 +17,8 @@ public class Window {
 
     private static Window window = null;
 
+    private static Scene currentScene;
+
     private Window() {
         this.width = 1200;
         this.height = 800;
@@ -32,10 +34,13 @@ public class Window {
         return Window.window;
     }
 
-    public void run() {
+    public void run(Scene initScene) {
         System.out.println("LwJGL version: " + Version.getVersion());
 
         init();
+
+        changeScene(initScene);
+
         loop();
     }
 
@@ -71,8 +76,15 @@ public class Window {
             glClearColor(0.1f, 0.15f, 0.2f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
 
+            currentScene.update();
+
             glfwSwapBuffers(glfwWindow);
         }
+    }
+
+    public static void changeScene(Scene scene) {
+        currentScene = scene;
+        currentScene.init();
     }
 
 }
