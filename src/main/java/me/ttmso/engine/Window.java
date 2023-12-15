@@ -1,6 +1,7 @@
 package me.ttmso.engine;
 
 import me.ttmso.engine.input.*;
+import me.ttmso.engine.utils.Time;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
@@ -43,6 +44,8 @@ public class Window {
         changeScene(initScene);
         loop();
 
+        currentScene.exit();
+
         glfwFreeCallbacks(glfwWindow);
         glfwDestroyWindow(glfwWindow);
 
@@ -78,15 +81,23 @@ public class Window {
     }
 
     public void loop() {
+        float lastUpdate = Time.getTime();
+        float dt = -1.0f;
+
         while (!glfwWindowShouldClose(glfwWindow)) {
             glfwPollEvents();
 
             glClearColor(0.1f, 0.15f, 0.2f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            currentScene.update();
+            if (dt >= 0) {
+                currentScene.update(dt);
+            }
 
             glfwSwapBuffers(glfwWindow);
+
+            dt = Time.getTime() - lastUpdate;
+            lastUpdate = Time.getTime();
         }
     }
 
